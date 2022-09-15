@@ -94,7 +94,9 @@ class ManageTasksTest extends TestCase
     public function user_can_edit_an_existing_task()
     {
         // Generate 1 record task pada table `tasks`.
-        $task = Task::factory()->create();
+        $task = Task::factory()->create([
+            'id' => random_int(1, 1000),
+        ]);
 
         // User membuka halaman Daftar Task.
         $this->visit('/tasks');
