@@ -26,8 +26,7 @@ class TasksController extends Controller
             'description' => 'required|max:255',
         ]);
 
-        Task::create($taskData
-    );
+        Task::create($taskData);
 
         return back();
     }
@@ -40,6 +39,13 @@ class TasksController extends Controller
         ]);
 
         $task->update($taskData);
+
+        return redirect('/tasks');
+    }
+
+    public function destroy(Task $task)
+    {
+        $task->delete();
 
         return redirect('/tasks');
     }
