@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::get('tasks', [TasksController::class, 'index']);
 Route::post('tasks', [TasksController::class, 'store']);
+Route::patch('tasks/{task}', [TasksController::class, 'update']);
 
 Auth::routes();
 
