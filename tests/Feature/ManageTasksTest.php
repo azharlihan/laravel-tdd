@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ManageTasksTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function user_can_create_a_task()
     {
