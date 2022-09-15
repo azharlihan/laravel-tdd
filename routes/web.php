@@ -23,6 +23,7 @@ Route::get('tasks', [TasksController::class, 'index']);
 Route::post('tasks', [TasksController::class, 'store']);
 Route::patch('tasks/{task}', [TasksController::class, 'update']);
 Route::delete('tasks/{task}', [TasksController::class, 'destroy']);
+Route::patch('tasks/{task}/toggle', [TasksController::class, 'toggle']);
 
 Auth::routes();
 

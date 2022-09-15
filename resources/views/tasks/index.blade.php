@@ -8,7 +8,7 @@
                 <h2>Tasks</h2>
                 <ul class="list-group mt-4">
                     @foreach ($tasks as $task)
-                        <li class="list-group-item">
+                        <li class="list-group-item {{ $task->is_done ? 'task-done' : '' }}">
                             <form action="{{ url("tasks/$task->id") }}" method="post" class="float-end" onsubmit="return confirm('Are U sure to delete this task?')">
                                 @csrf @method('DELETE')
                                 <input type="submit" value="X" id="delete_task_{{ $task->id }}" class="btn btn-link btn-xs p-0">
@@ -17,7 +17,12 @@
                                     edit
                                 </a>
                             </form>
-                            {{ $task->name }} <br>
+
+                            <form action="{{ url('tasks/' . $task->id . '/toggle') }}" method="post">
+                                @csrf @method('PATCH')
+                                <input type="submit" value="{{ $task->name }}" id="toggle_task_{{ $task->id }}" class="btn btn-link p-0">
+                            </form>
+
                             {{ $task->description }}
                         </li>
                     @endforeach

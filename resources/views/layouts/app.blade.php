@@ -16,6 +16,14 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    <style>
+        .task-done {
+            background-color: #dff0d8;
+            text-decoration: line-through;
+            color: #3c763d;
+        }
+    </style>
 </head>
 
 <body>
