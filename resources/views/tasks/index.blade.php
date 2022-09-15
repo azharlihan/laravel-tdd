@@ -4,9 +4,9 @@
     <h1 class="page-header text-center">Tasks Management</h1>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-4">
+            <div class="col-md-4 mt-4">
                 <h2>Tasks</h2>
-                <ul class="list-group">
+                <ul class="list-group mt-4">
                     @foreach ($tasks as $task)
                         <li class="list-group-item">
                             {{ $task->name }} <br>
@@ -15,8 +15,19 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mt-4">
                 <h2>New Task</h2>
+
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <ul class="list-unstyled mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form action="{{ url('tasks') }}" method="post">
                     @csrf
                     <div class="form-group">

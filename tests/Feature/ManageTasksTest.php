@@ -37,6 +37,24 @@ class ManageTasksTest extends TestCase
     }
 
     /** @test */
+    public function task_entry_must_pass_validation()
+    {
+        // Submit form untuk membuat task baru
+        // dengan field name description kosong
+        $this
+            ->visit('/tasks')
+            ->submitForm('Create Task', [
+                'name' => '',
+                'description' => '',
+            ]);
+
+        // Cek pada tampilan apakah ada error untuk field nama dan description
+        $this
+            ->see(__('validation.required', ['attribute' => 'name']))
+            ->see(__('validation.required', ['attribute' => 'description']));
+    }
+
+    /** @test */
     public function user_can_browser_tasks_index_page()
     {
         $this->assertTrue(true);
