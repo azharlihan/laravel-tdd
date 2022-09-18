@@ -10,6 +10,16 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function getRegisterFields($overrides = [])
+    {
+        return array_merge([
+            'name'                  => 'John Thor',
+            'email'                 => 'username@example.net',
+            'password'              => 'secreteightchar',
+            'password_confirmation' => 'secreteightchar',
+        ], $overrides);
+    }
+
     /** @test */
     public function user_can_register()
     {
@@ -17,12 +27,7 @@ class RegisterTest extends TestCase
         $this->visit('/register');
 
         // Submit form register dengan name, email dan password 2 kali
-        $this->submitForm('Register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'username@example.net',
-            'password'              => 'secreteightchar',
-            'password_confirmation' => 'secreteightchar',
-        ]);
+        $this->submitForm('Register', $this->getRegisterFields());
 
         // Lihat halaman ter-redirect ke url '/home' (register sukses).
         $this->seePageIs('/home');
@@ -44,12 +49,7 @@ class RegisterTest extends TestCase
     public function user_name_is_required()
     {
         // Submit form untuk register dengan field 'name' kosong.
-        $this->post('/register', [
-            'name'                  => '',
-            'email'                 => 'username@example.net',
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields(['name' => '']));
 
         // Cek pada session apakah ada error untuk field 'name'.
         $this->assertSessionHasErrors(['name']);
@@ -59,12 +59,9 @@ class RegisterTest extends TestCase
     public function user_name_maximum_is_255_characters()
     {
         // Submit form untuk register dengan field 'name' 260 karakter.
-        $this->post('/register', [
-            'name'                  => str_repeat('John Thor ', 26),
-            'email'                 => 'username@example.net',
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields([
+            'name' => str_repeat('John Thor ', 26)
+        ]));
 
         // Cek pada session apakah ada error untuk field 'name'.
         $this->assertSessionHasErrors(['name']);
@@ -74,12 +71,7 @@ class RegisterTest extends TestCase
     public function user_email_is_required()
     {
         // Submit form untuk register dengan field 'email' kosong.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => '',
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields(['email' => '']));
 
         // Cek pada session apakah ada error untuk field 'email'.
         $this->assertSessionHasErrors(['email']);
@@ -89,12 +81,9 @@ class RegisterTest extends TestCase
     public function user_email_must_be_a_valid_email()
     {
         // Submit form untuk register dengan field 'email' tidak valid.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'username.example.net',
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields([
+            'email' => 'username.example.net',
+        ]));
 
         // Cek pada session apakah ada error untuk field 'email'.
         $this->assertSessionHasErrors(['email']);
@@ -104,12 +93,9 @@ class RegisterTest extends TestCase
     public function user_email_maximum_is_255_characters()
     {
         // Submit form untuk register dengan field 'email' 260 karakter.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => str_repeat('username@example.net', 13),
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields([
+            'email' => str_repeat('username@example.net', 13),
+        ]));
 
         // Cek pada session apakah ada error untuk field 'email'.
         $this->assertSessionHasErrors(['email']);
@@ -123,12 +109,9 @@ class RegisterTest extends TestCase
 
         // Submit form untuk register dengan field
         // 'email' yang sudah ada di tabel users.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'emailsama@example.net',
-            'password'              => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields([
+            'email' => 'emailsama@example.net',
+        ]));
 
         // Cek pada session apakah ada error untuk field 'email'.
         $this->assertSessionHasErrors(['email']);
@@ -138,12 +121,7 @@ class RegisterTest extends TestCase
     public function user_password_is_required()
     {
         // Submit form untuk register dengan field 'password' kosong.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'username@example.net',
-            'password'              => '',
-            'password_confirmation' => 'secret',
-        ]);
+        $this->post('/register', $this->getRegisterFields(['password' => '']));
 
         // Cek pada session apakah ada error untuk field 'password'.
         $this->assertSessionHasErrors(['password']);
@@ -152,13 +130,8 @@ class RegisterTest extends TestCase
     /** @test */
     public function user_password_minimum_is_6_characters()
     {
-        // Submit form untuk register dengan field 'password' 5 karakter.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'username@example.net',
-            'password'              => 'ecret',
-            'password_confirmation' => 'ecret',
-        ]);
+        // Submit form untuk register dengan field 'password' 8 karakter.
+        $this->post('/register', $this->getRegisterFields(['password' => 'ecret']));
 
         // Cek pada session apakah ada error untuk field 'password'.
         $this->assertSessionHasErrors(['password']);
@@ -169,12 +142,10 @@ class RegisterTest extends TestCase
     {
         // Submit form untuk register dengan field 'password'
         // beda dengan 'password_confirmation'.
-        $this->post('/register', [
-            'name'                  => 'John Thor',
-            'email'                 => 'username@example.net',
+        $this->post('/register', $this->getRegisterFields([
             'password'              => 'secret',
             'password_confirmation' => 'escret',
-        ]);
+        ]));
 
         // Cek pada session apakah ada error untuk field 'password'.
         $this->assertSessionHasErrors(['password']);
