@@ -55,11 +55,7 @@ jobs:
         run: php artisan config:clear
 
       - name: Run Migration
-        run: php artisan migrate --seed
-        env:
-          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+        run: php artisan migrate
 
       - name: Test with php artisan
-        run: php artisan test --exclude siak
-        env:
-          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+        run: php artisan test
