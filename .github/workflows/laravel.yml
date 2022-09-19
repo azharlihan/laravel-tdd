@@ -2,9 +2,6 @@ name: tests
 
 on:
   push:
-  pull_request:
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   tests:
@@ -35,5 +32,6 @@ jobs:
         run: |
           composer require "laravel/framework=^${{ matrix.laravel }}" --no-update
           composer update --prefer-dist --no-interaction --no-progress
+          php artisan key:generate
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
