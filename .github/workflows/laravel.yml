@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_CONNECTION: sqlite
-      DB_DATABASE: :memory:
+      DB_DATABASE: ":memory:"
 
     strategy:
       fail-fast: false
