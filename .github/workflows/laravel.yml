@@ -32,6 +32,8 @@ jobs:
         run: |
           composer require "laravel/framework=^${{ matrix.laravel }}" --no-update
           composer update --prefer-dist --no-interaction --no-progress
+          npm install
+          npm run build
           cp .env.example .env
           php artisan key:generate
       - name: Execute tests
