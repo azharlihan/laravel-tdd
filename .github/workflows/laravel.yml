@@ -2,6 +2,9 @@ name: tests
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   tests:
@@ -10,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.0']
+        php: ['8.0', '8.1']
         laravel: [9]
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
@@ -32,9 +35,16 @@ jobs:
         run: |
           composer require "laravel/framework=^${{ matrix.laravel }}" --no-update
           composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Build assets
+        run: |
           npm install
           npm run build
+
+      - name: Prepare application
+        run: |
           cp .env.example .env
           php artisan key:generate
+
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
