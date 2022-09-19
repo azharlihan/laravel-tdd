@@ -1,20 +1,39 @@
-on: push
-name: CI
+name: tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
 jobs:
-  phpunit:
-    runs-on: ubuntu-latest
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:8.0
+  tests:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: ['8.0']
+        laravel: [9]
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          fetch-depth: 1
-      - name: Install composer dependencies
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
         run: |
-          composer install --no-scripts
-      - name: Prepare Laravel Application
-        run: |
-          cp .env.ci .env
-          php artisan key:generate
-      - name: Run Testsuite
-        run: vendor/bin/phpunit tests/
+          composer require "laravel/framework=^${{ matrix.laravel }}" --no-update
+          composer update --prefer-dist --no-interaction --no-progress
+      - name: Execute tests
+        run: vendor/bin/phpunit --verbose
