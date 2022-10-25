@@ -4,3 +4,6 @@
 
 ## About
 Source code latihan laravel TDD dari blog https://blog.nafies.id/tags/#testing.
+
+## Live Server
+https://laravel-tdd.azharlihan.com/
